@@ -62,4 +62,44 @@
 
 
 
-;; 1.6
+;; 1.6 What does new-if do, and why does it do it?
+
+(define (new-if predicate then-clause else-clause)
+  (cond (predicate then-clause)
+        (else else-clause)))
+
+(define (sqrt-iter guess x)
+  ;; Approximate square roots using Newton's method
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x)
+                 x)))
+
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+;; My "improved average" takes an arbitrary number of numbers, returns
+;; their average.
+(define (average  x . xs )
+  (/ (apply + (cons x xs))
+     (length (cons x xs)))
+  )
+      
+
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001))
+
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+
+;; The "new-if" sqrt-iter. I leads to the following error:
+;; ;Aborting!: maximum recursion depth exceeded
+
+;; (define (sqrt-iter guess x)
+;;   (new-if (good-enough? guess x)
+;;           guess
+;;           (sqrt-iter (improve guess x)
+;;                      x)))
+
+;; Why exaclty this does not work seems conraversial to this day:
+;; http://community.schemewiki.org/?sicp-ex-1.6
