@@ -103,3 +103,27 @@
 
 ;; Why exaclty this does not work seems conraversial to this day:
 ;; http://community.schemewiki.org/?sicp-ex-1.6
+
+
+;; 1.7 People seem of three minds about this one as well
+;; http://community.schemewiki.org/?sicp-ex-1.7
+
+;; 1.8 Cube root procedure using Newton's method
+
+(define (dgb-newton-cube x)
+  (define (improve x guess )
+    (/ (+ (/ x (* guess guess)) (* 2 guess)) 3))
+  (define (good-enough? guess x)
+    (< (abs (- (* guess guess guess) x)) 0.001))
+  (define (cube-rooter guess x)
+  (if (good-enough? guess x)
+      guess
+      (cube-rooter x (improve x guess))))
+  (cube-rooter 1 x)
+  )
+
+
+
+
+
+

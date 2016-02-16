@@ -1,0 +1,136 @@
+* 1A Overview and Introduction to Lisp
+  Hal Ableson
+*** Process vs Procedure
+***** Process: Magical Spirit inside computer that does things
+***** Procedure: Rules that tell the Spirit, Procedure, what to do
+***** Lisp: used to conjure processes by casting procedure.
+*** CS: Formalizing How to Do Stuff
+***** Uses techniques for controlling Complexity                 :greenboard: 
+******* Difference between CS complexity and others: CS isn't real.
+******* CS deals with idealized components.
+********* Constraints: only limitations are our own mind
+********* Kind of a theoretical engineering
+***** What are these techniques:
+******* "Black Box Abstraction" : internals of a procedure not important.
+********* Primitive objects
+*********** Primitive procedures
+*********** Primitive data
+********* Means of combination
+          Combines primitive procedures and data
+*********** Procedure composition
+*********** Construction of compound data
+********* Means of abstraction
+          Use combined primitives in more complex programs
+*********** procedure definition
+*********** simple data abstraction
+********* Capturing common patterns
+*********** High order procedures
+            Procedures whose inputs and outputs are themselves procedures.
+*********** Data as procedures
+            Line between data and procedure blurs "at an incredible rate."
+******* Conventional Interfaces
+********* Generic operations
+********* Large-scale structure and modularity.
+********* Object-oriented programming
+          "Your system as a kind of society"
+********* Operations on aggregates
+          Large systems of streams put together like a large electrical system.
+******* Making New Languages
+        Purpose of language is to surpass or emphasize certain aspects of the system.
+********* Meta-linguistic Abstraction
+          Look at the process of interpretation (apply-eval)
+*********** Interpretation:
+            Apply-Eval
+*********** Example: logic programming
+*********** Register machines
+*** Learning Lisp
+    Most important thing in this course: general framework for thinking about languages:
+***** Primitive Elements
+******* Numbers: 3, 5, 17.4
+******* Primitive methods: + ("Plato's concept of how you add things")
+***** Means of combination
+******* Applying an operator to some operands. (+ <- operator 3 4  <- operands )
+******* Lisp uses prefix notation. Fully parenthesized. 
+        All parentheses mandatory ( 3 4) =/= ((3 4))
+******* Really you are writing a tree.
+***** Means of abstraction
+******* (define (symbol_b symbol_a)(S-expression)) == (define lambda(symbol)(S-expression)
+******* In Lisp, there should be no distinction between primitive and compound elements
+******* Make a case analysis:
+        #+NAME: case_analysis.scm
+        #+BEGIN_SRC scheme
+          (define (cond_abs x)
+            (cond ((< x 0) (- x)) ;; (cond (predicate) (procedure)
+                  ((= x 0) (  0))
+                  ((> x 0) (  x))))
+
+          (define (if_abs x)
+            (if (< x 0)
+                (- x)
+                (x)))
+                  
+        #+END_SRC
+*** Approximation to (square root of X)
+***** Successive averaging by Herod of Alexandria
+      - Make a guess G
+      - Improve guess by averaging g and x/g
+      - Keep importing guess until it is good enough
+      - Use 1 as an initial guess
+***** Herod's method in lisp
+      #+name: h_root
+      #+BEGIN_SRC scheme
+        (define (try_guess x)
+          (if (good-enough? guess x)
+              guess
+              (improve_guess x)))
+
+        (define (sqrt x) (try_guess 1))
+
+        ;;See homework for more
+      #+END_SRC
+******* Block structure                                               :def:
+          All functions are  packaged inside
+          #+NAME: all_inclusive_root.scm
+          #+BEGIN_SRC scheme
+            (define (sqrt x)
+              (define (improve guess)
+                (average guess (/ x guess)))
+              (define (good-enough? guess)
+                (< (abs (- (square guess) x))
+                   .001))
+              (define (try guess)
+                (if (good-enough? guess)
+                    guess
+                    (try (improve guess))))
+              (try 1))
+          #+END_SRC
+*** Summary
+                            procedures             | data     
+    |----------------------+-----------------------+----------|
+    | primitive elements   | + * < =               | 23 1.738 |
+    |----------------------+-----------------------+----------|
+    | means of combination | ()composition COND IF |          |
+    |----------------------+-----------------------+----------|
+    | means of abstraction | DEFINE                |          |
+    |----------------------+-----------------------+----------|
+* 1B: Procedures and Processes; Substitution Model
+  Sussman, G.
+*** Compute sum of squares of two numbers
+    #+NAME: sos.scm
+    #+BEGIN_SRC scheme
+      (define (sos x y)
+        (define (sq x)
+          (* x x))
+        (+ (sq x) (sq y))
+        )
+    #+END_SRC
+*** Kinds of expressions:
+***** Atomic
+******* Numbers
+******* Symbols
+***** Special forms
+******* Lambda expressions
+******* definitons
+******* conditionals
+******* combinations
+*** 
